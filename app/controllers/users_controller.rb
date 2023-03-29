@@ -20,4 +20,12 @@ class UsersController < ApplicationController
         render json: users
 
     end
+    def update
+        user_book = UserBook.find_by(user_id: params[:id], book_id: params[:book_id])
+        if user_book.destroy
+            book = Book.find(params[:book_id])
+            render json: book
+        else
+            render json: {error: "Error removing book from user's collection"}
+    end
 end
