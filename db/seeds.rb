@@ -6,8 +6,9 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
+puts '📚📚🔖📚'
 
-require 'rest-client'
+ require 'rest-client'
 require 'json'
 
 firstBatch = RestClient.get 'https://www.googleapis.com/books/v1/users/102281797701392507828/bookshelves/0/volumes?maxResults=40'
@@ -34,3 +35,5 @@ secondArray.each do |book|
     description: book["volumeInfo"]["description"],
     imageURL: book["volumeInfo"]["imageLinks"]["thumbnail"])
 end
+
+puts 'done📑'
