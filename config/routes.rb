@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     post "/signup", to: "users#create"
     get "/me", to: "users#show"
     post "/login", to: "sessions#create"
+    post "/register", to: "sessions#authenticate"
     delete "/logout", to: "sessions#destroy"
     # patch "/bookclubs/:id/current-book", to: "bookclubs#current_book"
 
