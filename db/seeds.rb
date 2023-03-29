@@ -25,7 +25,10 @@ firstArray.each do |book|
     # subtitle: book["volumeInfo"]["subtitle"],
     author: book["volumeInfo"]["authors"].join(", "),
     description: book["volumeInfo"]["description"],
-    imageURL: book["volumeInfo"]["imageLinks"]["thumbnail"])
+    imageURL: book["volumeInfo"]["imageLinks"]["thumbnail"],
+    pages: book["volumeInfo"]["imageLinks"]["thumbnail"],
+    publication_date: book["volumeInfo"]["imageLinks"]["thumbnail"],
+    genres: book["volumeInfo"]["imageLinks"]["thumbnail"])
 end
 
 secondArray.each do |book|
@@ -33,7 +36,11 @@ secondArray.each do |book|
     # subtitle: book["volumeInfo"]["subtitle"],
     author: book["volumeInfo"]["authors"].join(", "),
     description: book["volumeInfo"]["description"],
-    imageURL: book["volumeInfo"]["imageLinks"]["thumbnail"])
+    imageURL: book["volumeInfo"]["imageLinks"]["thumbnail"],
+    pages: book["volumeInfo"]["imageLinks"]["thumbnail"],
+    publication_date: book["volumeInfo"]["imageLinks"]["thumbnail"],
+    genres: book["volumeInfo"]["imageLinks"]["thumbnail"])
 end
+
 
 puts 'done📑'
