@@ -4,10 +4,11 @@ class CreateBooks < ActiveRecord::Migration[7.0]
       t.string :imageURL
       t.string :title
       t.string :description
-      t.integer :pages
+      t.decimal :price
       t.string :publication_date
-      t.string :genres
+      t.string :publisher
       t.string :author
+      t.references :category, null: false, foreign_key: true
 
       t.timestamps
     end

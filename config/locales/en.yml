@@ -31,3 +31,6 @@
 
 en:
   hello: "Hello world"
+  # faker:
+  # book:
+  # pages: "#{rand(200..1000)} pages"
