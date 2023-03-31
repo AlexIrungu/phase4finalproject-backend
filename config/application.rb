@@ -11,6 +11,19 @@ module Phase4finalprojectBackend
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
+    # Include Faker configuration for seed data
+    config.generators do |g|
+      g.factory_bot false
+      g.fixture_replacement :factory_bot, dir: "spec/factories"
+      g.faker true
+    end
+     # Load custom Faker locale files
+     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
+     config.i18n.available_locales = [:en]
+    # config.i18n.fallbacks = true
+    # Set default locale to en
+     config.i18n.default_locale = :en
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
