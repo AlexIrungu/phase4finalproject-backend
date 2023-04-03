@@ -1,15 +1,15 @@
 class BooksController < ApplicationController
-    def index
-        books = Book.all.sort_by { |b| b.title }
-        render json: books, except: [:created_at, :updated_at]
-    end
+    # def index
+    #     books = Book.all.sort_by { |b| b.title }
+    #     render json: books, except: [:created_at, :updated_at]
+    # end
 
-    class BooksController < ApplicationController
+    # class BooksController < ApplicationController
         rescue_from ActiveRecord::RecordInvalid, with: :render_validation_errors
       rescue_from ActiveRecord::RecordNotFound, with: :not_found
-      before_action :current_user
-      before_action :require_admin, only: [:create, :update, :destroy]
-      before_action :set_book, only: %i[ show update destroy ]
+     # before_action :current_user
+      #before_action :require_admin, only: [:create, :update, :destroy]
+      #before_action :set_book, only: %i[ show update destroy ]
     
     
       # GET /books
@@ -64,6 +64,6 @@ class BooksController < ApplicationController
           render json: { error: invalid.record.errors.full_messages }, status: 422
         end
         
-    end
+    # end
     
 end
