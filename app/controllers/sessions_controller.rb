@@ -19,6 +19,7 @@ class SessionsController < ApplicationController
     def destroy
       session[:user_id] = nil
       render json: { message: "Logged out successfully" }
+    end
     rescue => e
       render json: { errors: e.message }, status: :unprocessable_entity
     end
