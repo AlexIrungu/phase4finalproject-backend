@@ -1,46 +1,77 @@
 class UsersController < ApplicationController
-    def create
-        if user.valid?
-            session[:user_id] = user.id
-            render json: user, status: :created
-        else
-            render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
-        end
+    rescue_from ActiveRecord::RecordInvalid, with: :render_validation_errors
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  # before_action :set_user, only: %i[ show update destroy ]
+ 
+  # GET /users
+  def index
+    users = User.all
+    render json: users, status: :ok
+  end
+
+  # GET logged user /me
+  # handles auto-login
+  def show
+    user = User.find_by(id: session[:user_id])
+    if user
+        render json: user, status: :ok
+    else
+        render json: { error: "Unauthorized" }, status: 401
+    end
+  end
+
+  # POST /users
+  # handle signup
+  def create
+    if user_params[:password] == user_params[:password_confirmation]
+      user = User.create!(user_params)
+      session[:user_id] = user.id
+      render json: user, status: :created
+    end
+  end
+
+  # PATCH/PUT /users/1
+  def update
+    user = User.find(session[:user_id])
+    user.update!(user_params)
+    render json: user, status: :created
+  end
+
+  # reset user password when not logged in and consequently log in. 
+  def reset_password
+    user = User.find_by(email: params[:email])
+    user.update!(password: params[:password])
+    session[:user_id] = user.id
+    render json: user, status: :created
+  end
+
+  # DELETE /users/1
+  def destroy
+    user = User.find(session[:user_id])
+    user.destroy
+
+    # after delete user, the session is deleted.
+    session.delete(:user_id)
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_user
+      @user = User.find(params[:id])
     end
 
-     def index
-    #     user = User.current_user
-        # if user != "Error"
-        #     render json: user, only: [:id, :username], include: [:notes, :books]
-        # else 
-        #     render json: {user: {id: "", username: '', notes: [], books: []}}    # Return the current user or return an empty user object to initialize state when App mounts before a user has signed in
-        # end
-
-        users = User.all
-        render json: users
-
-    end
-    def update
-        # user_book = UserBook.find_by(user_id: params[:id], book_id: params[:book_id])
-        # if user_book.destroy
-        #     book = Book.find(params[:book_id])
-        #     render json: book
-        # else
-        #     render json: {error: "Error removing book from user's collection"}
-
-        user = @current_user
-        user.update(user_params)
-        render json: user
-    end
-
-    def destroy
-        @current_user.destroy 
-        head :no_content
-    end
-
-    private 
-
+    # Only allow a list of trusted parameters through.
     def user_params
-        params.permit(:email, :first_name, :last_name,  :password_digest)
+      params.permit(:name, :email, :password, :phone_number, :avatar_url, :is_admin, :password_confirmation)
+    end
+
+    # render error for not found
+    def not_found
+      render json: { message: 'User not found'}, status: 404
+    end
+
+    # render error for invalid parameters / unprocessable entities
+    def render_validation_errors(invalid)
+      render json: { error: invalid.record.errors.full_messages }, status: 422
     end
 end
