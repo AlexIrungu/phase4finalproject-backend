@@ -15,7 +15,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_30_202329) do
     t.string "imageURL"
     t.string "title"
     t.string "description"
+
     t.decimal "price"
+   
     t.string "publication_date"
     t.string "publisher"
     t.string "author"
