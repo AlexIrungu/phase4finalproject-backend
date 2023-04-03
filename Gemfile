@@ -43,6 +43,8 @@ gem 'faker', '~> 3.1', '>= 3.1.1'
 
 gem 'i18n', '~> 1.12'
 
+gem 'active_model_serializers', '~> 0.10.13'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
