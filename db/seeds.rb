@@ -22,28 +22,29 @@ puts "💁🙆Seeding users...🧑‍🦳🙍"
     )
 end
 
-puts "Seeding categories"
+# puts "Seeding categories"
 
-10.times do
-    Category.create(
-        genre: Faker::Book.genre,
-        description: Faker::Lorem.paragraph_by_chars(number: 100, supplemental: true),
-        age_category: %w[YoungAdult Children Adult].sample
-    )
-end
+# 10.times do
+#     Category.create(
+#         genre: Faker::Book.genre,
+
+#         description: Faker::Lorem.paragraph_by_chars(number: 100, supplemental: true),
+#         # age_category: %w[YoungAdult Children Adult].sample
+#     )
+# end
 
 
 
 puts "Seeding orders"
 
-50.times do
-    Order.create(
-        quantity: rand(1..20),
-        total_price: rand(20..100).round(2),
-        user_id: rand(1..10),
-        book_id: rand(1..100)
-    )
-end
+# 50.times do
+#     Order.create(
+#         quantity: rand(1..20),
+#         total_price: rand(20..100).round(2),
+#         user_id: rand(1..10),
+#         book_id: rand(1..100)
+#     )
+# end
 
 
 
