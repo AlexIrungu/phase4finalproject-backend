@@ -1,7 +1,7 @@
 class Category < ApplicationRecord
     has_many :books
 
-    validates :genre, :sub_genre :description, presence: true
+    validates :genre, :sub_genre, :description, presence: true
     validates :age_category, { 
         presence: true,
         inclusion: {
