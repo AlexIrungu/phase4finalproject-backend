@@ -16,22 +16,20 @@ puts "💁🙆Seeding users...🧑‍🦳🙍"
         last_name: Faker::Name.last_name,
         email: Faker::Internet.free_email,
         password_digest: "@abc123ABC",
-        # phone_number: 123456789,
-        # avatar_url: Faker::Avatar.image,
-        # is_admin: boolean_value.sample
+        
     )
 end
 
-# puts "Seeding categories"
+puts "Seeding categories"
 
-# 10.times do
-#     Category.create(
-#         genre: Faker::Book.genre,
+10.times do
+    Category.create(
+        genre: Faker::Book.genre,
 
-#         description: Faker::Lorem.paragraph_by_chars(number: 100, supplemental: true),
-#         # age_category: %w[YoungAdult Children Adult].sample
-#     )
-# end
+        description: Faker::Lorem.paragraph_by_chars(number: 100, supplemental: true),
+         age_category: %w[YoungAdult Children Adult].sample
+    )
+end
 
 
 

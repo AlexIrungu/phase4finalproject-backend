@@ -6,7 +6,7 @@ class Book < ApplicationRecord
    
 
     validates :title, :author, :description, :imageURL,  :publication_date, :publisher, presence: true
-    # validates  numericality: { only_integer: true, greater_than: 0 }
+     validates :price, numericality: { only_integer: true, greater_than: 0 }
   end
   
 
