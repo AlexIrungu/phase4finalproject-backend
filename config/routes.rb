@@ -8,7 +8,7 @@ Rails.application.routes.draw do
    resources :orders, only: [:index, :show, :create, :update, :destroy]
    resources :categories, only: [:index, :show, :create, :update, :destroy]
 
-   namespace :api do
+  #  namespace :api do
     # resources :users, only: [:index, :destroy, :update]
     post "/signup", to: "users#create"
     get "/me", to: "users#show"
@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   
     
     
-  end
+  # end
   # get "*path", to: "fallback#index", constraints: ->(req) { !req.xhr? && req.format.html? }
 
 end

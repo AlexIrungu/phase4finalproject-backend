@@ -33,7 +33,7 @@ end
 
 
 
-#puts "Seeding orders"
+# puts "Seeding orders"
 
 # 50.times do
 #     Order.create(
@@ -115,6 +115,6 @@ end
          
     # )
 # end
-
+3
 
 puts 'done📑'
