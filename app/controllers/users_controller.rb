@@ -1,77 +1,54 @@
 class UsersController < ApplicationController
-    rescue_from ActiveRecord::RecordInvalid, with: :render_validation_errors
+  rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
-  # before_action :set_user, only: %i[ show update destroy ]
- 
-  # GET /users
+  # before_action :require_admin, only: [:index, :create, :show]
+  # before_action :require_student_or_teacher, only: [:index, :create, :show]
+
   def index
     users = User.all
-    render json: users, status: :ok
+    render json: users
   end
 
-  # GET logged user /me
-  # handles auto-login
-  def show
-    user = User.find_by(id: session[:user_id])
-    if user
-        render json: user, status: :ok
-    else
-        render json: { error: "Unauthorized" }, status: 401
-    end
-  end
-
-  # POST /users
-  # handle signup
   def create
-    if user_params[:password] == user_params[:password_confirmation]
-      user = User.create!(user_params)
+    begin
+      user = User.new(user_params)
+      user.password = params[:password]
+      user.password_confirmation = params[:password_confirmation]
+      user.save!
+
       session[:user_id] = user.id
-      render json: user, status: :created
+      render json: { status: :created, message: "User successfully registered", user: user }
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+    rescue ActiveRecord::RecordNotUnique => e
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /users/1
-  def update
+  def show
     user = User.find(session[:user_id])
-    user.update!(user_params)
-    render json: user, status: :created
-  end
-
-  # reset user password when not logged in and consequently log in. 
-  def reset_password
-    user = User.find_by(email: params[:email])
-    user.update!(password: params[:password])
-    session[:user_id] = user.id
-    render json: user, status: :created
-  end
-
-  # DELETE /users/1
-  def destroy
-    user = User.find(session[:user_id])
-    user.destroy
-
-    # after delete user, the session is deleted.
-    session.delete(:user_id)
+    render json: user
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def user_params
-      params.permit(:name, :email, :password, :phone_number, :avatar_url, :is_admin, :password_confirmation)
-    end
+  def user_params
+    params.require(:user).permit(:last_name, :first_name, :email, :password, :password_confirmation)
+  end
 
-    # render error for not found
-    def not_found
-      render json: { message: 'User not found'}, status: 404
-    end
+  def record_invalid(invalid)
+    render json: { errors: invalid.record.errors.full_messages }, status: :unprocessable_entity
+  end
 
-    # render error for invalid parameters / unprocessable entities
-    def render_validation_errors(invalid)
-      render json: { error: invalid.record.errors.full_messages }, status: 422
-    end
+  def not_found
+    render json: { error: "User Not Found" }, status: :unauthorized
+  end
+
+  # def require_admin
+  #   head :forbidden unless current_user && current_user.admin?
+  # end
+
+  # def require_student_or_teacher
+  #   head :forbidden unless current_user && (current_user.student? || current_user.teacher?)
+  # end
 end

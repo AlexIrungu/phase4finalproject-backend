@@ -42,7 +42,7 @@ class CategoriesController < ApplicationController
   
       # Only allow a list of trusted parameters through.
       def category_params
-        params.require(:category).permit(:genre,  :description, :age_category)
+        params.require(:category).permit(:genre,  :description, )
       end
   
           # render error for not found

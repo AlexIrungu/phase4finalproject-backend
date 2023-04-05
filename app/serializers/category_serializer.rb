@@ -1,4 +1,6 @@
 class CategorySerializer < ActiveModel::Serializer
-    attributes :genre,  :description, :age_category
-    has_many :books
+  attributes :id, :genre, :description
+  has_many :books do
+    link(:related) { category_books_url(object) }
   end
+end

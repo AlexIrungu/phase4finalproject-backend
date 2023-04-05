@@ -1,120 +1,80 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+require 'faker'
 
-puts "💁🙆Seeding users...🧑‍🦳🙍"
-
-10.times do
-   
-
-    User.create(
-        first_name: Faker::Name.first_name,
-        last_name: Faker::Name.last_name,
-        email: Faker::Internet.free_email,
-        password_digest: "@abc123ABC",
-        
-    )
+# Create Categories
+5.times do
+  Category.create!(
+    genre: Faker::Book.genre,
+    description: Faker::Lorem.sentence(word_count: 6),
+    #  age_category: ["Young adult", "Children" ,"Adult", ].sample, inclusion: {
+    # in: %w[YoungAdult Children Adult],
+    # message: "Age category can only be Young adult, Children or Adult"
+#}
+  )
 end
 
-puts "Seeding categories"
-
+# Create Users
 10.times do
-    Category.create(
-        genre: Faker::Book.genre,
-
-        description: Faker::Lorem.paragraph_by_chars(number: 100, supplemental: true),
-         age_category: %w[YoungAdult Children Adult].sample
-    )
+  User.create!(
+    email: Faker::Internet.unique.email,
+    password_digest: BCrypt::Password.create("password"),
+    first_name: Faker::Name.first_name,
+    last_name: Faker::Name.last_name,
+    avatar_url: Faker::Avatar.image
+  )
 end
 
+# Create Books
+categories = Category.all
 
+50.times do
+  book = Book.create!(
+    title: Faker::Book.title,
+    description: Faker::Lorem.paragraph(sentence_count: 2),
+    price: Faker::Number.between(from: 1, to: 30),
+    publication_date: Faker::Date.between(from: '2015-01-01', to: Date.today),
+    publisher: Faker::Book.publisher,
+    author: Faker::Book.author,
+    imageURL: Faker::Internet.url,
+    category_id: categories.sample.id
+  )
+end
 
-# puts "Seeding orders"
+# Create Orders
+users = User.all
+books = Book.all
+
+20.times do
+  order = Order.create!(
+    quantity: Faker::Number.between(from: 1, to: 5),
+    total_price: Faker::Commerce.price(range: 0..30.00),
+    user_id: users.sample.id,
+    book_id: books.sample.id
+  )
+end
+
+# Create Notes
+users = User.all
+books = Book.all
+
+100.times do
+  note = Note.create!(
+    content: Faker::Lorem.sentence(word_count: 12),
+    user_id: users.sample.id,
+    book_id: books.sample.id
+  )
+end
+
+# Create UserBooks
+users = User.all
+books = Book.all
+orders = Order.all
 
 # 50.times do
-#     Order.create(
-#         quantity: rand(1..20),
-#         total_price: rand(20..100).round(2),
-#         user_id: rand(1..10),
-#         book_id: rand(1..100)
-#     )
-# end
+#   user_book = UserBook.create!(
+#     user_id: users.sample.id,
+#     book_id: books.sample.id,
+#     order_id: orders.sample.id
+#   )
+#end
 
-
-
-
-
-puts '📚📚Seeding Books🔖📚'
-
- require 'rest-client'
-require 'json'
-
-firstBatch = RestClient.get 'https://www.googleapis.com/books/v1/users/102281797701392507828/bookshelves/0/volumes?maxResults=40'
-secondBatch = RestClient.get 'https://www.googleapis.com/books/v1/users/102281797701392507828/bookshelves/3/volumes?maxResults=40'
-
-firstJSON = JSON.parse(firstBatch)
-secondJSON = JSON.parse(secondBatch)
-
-firstArray = firstJSON["items"]
-secondArray = secondJSON["items"]
-
-firstArray.each do |book|
-    100.times do
-        date = Faker::Date.between(from: '1950-01-01', to: '2023-03-29')
-        year = date.year
-    Book.create(
-        
-    title: book["volumeInfo"]["title"],
-    publisher: Faker::Book.publisher,
-    price: 10.12,
-    
-    category_id: rand(1..10),
-    author: book["volumeInfo"]["authors"].join(", "),
-    description: book["volumeInfo"]["description"],
-    imageURL: book["volumeInfo"]["imageLinks"]["thumbnail"],
-    
-    publication_date: book["volumeInfo"]["publication_date"],
-    )
-    end
-end
-
-secondArray.each do |book|
-    100.times do
-        date = Faker::Date.between(from: '1950-01-01', to: '2023-03-29')
-        year = date.year
-
-    Book.create(
-        category_id: rand(1..10),
-        publisher: Faker::Book.publisher,
-        price: 10.12,
-    title: book["volumeInfo"]["title"],
-    author: book["volumeInfo"]["authors"].join(", "),
-    description: book["volumeInfo"]["description"],
-    imageURL: book["volumeInfo"]["imageLinks"]["thumbnail"],
- 
-    publication_date: book["volumeInfo"]["publication_date"],
-    )
-    end
-end
-
-
-
-    # Book.create(
-    #     title: Faker::Book.title,
-    #     author: Faker::Book.author,
-    #     description: Faker::Lorem.paragraph_by_chars(number: 100),
-      
-    #     year_of_publication: "12-12-2015",
-       
-    #     image_url: Faker::LoremFlickr.image,
-    #     isbn: "123456789012345678",
-         
-    # )
-# end
-3
-
-puts 'done📑'
+puts "Seed data created successfully"
